@@ -1,3 +1,5 @@
+.DEFAULT_GOAL:=build
+
 build-pngcrush:
 	podman build --file Dockerfile --tag img-sqz:pngcrush --target build-pngcrush
 
