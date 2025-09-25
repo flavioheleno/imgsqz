@@ -111,7 +111,7 @@ RUN --mount=type=cache,id="apk-${TARGETARCH}${TARGETVARIANT}",sharing=locked,tar
   apk add \
     libjpeg-turbo=3.1.0-r0 \
     libpng=1.6.47-r0 \
-    libstdc++=4.2.0-r6 \
+    libstdc++=14.2.0-r6 \
     zlib=1.3.1-r2
 
 COPY --from=build-pngcrush --chmod=0755 /usr/src/pngcrush /usr/local/bin/
@@ -123,7 +123,7 @@ COPY --from=build-jpegoptim --chmod=0755 /usr/local/bin/jpegoptim /usr/local/bin
 
 COPY --from=build-guetzli --chmod=0755 /usr/src/bin/Release/guetzli /usr/local/bin/
 
-COPY --from=build-mozjpeg --chmod=0755 /opt/mozjpeg/bin/cjpeg /usr/local/bin/mozjpeg
+COPY --from=build-mozjpeg --chmod=0755 /opt/mozjpeg/bin/* /usr/local/bin/
 COPY --from=build-mozjpeg /opt/mozjpeg/lib64/*.so /opt/mozjpeg/lib64/*.so.* /usr/local/lib/
 
 WORKDIR /app
