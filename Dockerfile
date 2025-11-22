@@ -1,4 +1,4 @@
-FROM alpine:3.22.1@sha256:4bcff63911fcb4448bd4fdacec207030997caf25e9bea4045fa6c8c44de311d1 AS build-base
+FROM alpine:3.22.2@sha256:4b7ce07002c69e8f3d704a9c5d6fd3053be500b7f1c69fc0d80990c2ad8dd412 AS build-base
 
 ARG TARGETARCH
 ARG TARGETVARIANT
@@ -11,7 +11,7 @@ RUN --mount=type=cache,id="apk-${TARGETARCH}${TARGETVARIANT}",sharing=locked,tar
     automake=1.17-r1 \
     build-base=0.5-r3 \
     cmake=3.31.7-r1 \
-    curl=8.14.1-r1 \
+    curl=8.14.1-r2 \
     g++=14.2.0-r6 \
     gcc=14.2.0-r6 \
     libjpeg-turbo-dev=3.1.0-r0 \
@@ -100,7 +100,7 @@ RUN --mount=type=cache,id="build-${TARGETARCH}${TARGETVARIANT}-mozjpeg",sharing=
   make -j"$(nproc)" install
 
 #######################################################################################################################
-FROM alpine:3.22.1@sha256:4bcff63911fcb4448bd4fdacec207030997caf25e9bea4045fa6c8c44de311d1 AS release
+FROM alpine:3.22.2@sha256:4b7ce07002c69e8f3d704a9c5d6fd3053be500b7f1c69fc0d80990c2ad8dd412 AS release
 
 ARG TARGETARCH
 ARG TARGETVARIANT
