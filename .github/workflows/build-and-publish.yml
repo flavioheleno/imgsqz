@@ -38,7 +38,7 @@ jobs:
             type=semver,pattern={{major}},enable=${{ !startsWith(github.ref, 'refs/tags/v0.') }}
 
   build:
-    name: Build images
+    name: Build image
     needs: metadata
     runs-on: ${{ matrix.runner }}
 
@@ -77,6 +77,7 @@ jobs:
           platforms: ${{ matrix.platform }}
           labels: ${{ needs.metadata.outputs.labels }}
           outputs: type=image,name=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }},push-by-digest=true,name-canonical=true,push=true
+          provenance: false
           cache-from: type=gha,scope=${{ matrix.platform }}
           cache-to: type=gha,scope=${{ matrix.platform }},mode=max
 
