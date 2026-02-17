@@ -14,8 +14,8 @@ env:
 permissions: {}
 
 jobs:
-  name: Extract metadata
   metadata:
+    name: Extract metadata
     runs-on: ubuntu-slim
 
     permissions: {}
