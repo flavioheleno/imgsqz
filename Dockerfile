@@ -1,4 +1,4 @@
-FROM alpine:3.22.2@sha256:4b7ce07002c69e8f3d704a9c5d6fd3053be500b7f1c69fc0d80990c2ad8dd412 AS build-base
+FROM alpine:3.23.3@sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659 AS build-base
 
 ARG TARGETARCH
 ARG TARGETVARIANT
@@ -8,17 +8,17 @@ RUN --mount=type=cache,id="apk-${TARGETARCH}${TARGETVARIANT}",sharing=locked,tar
   apk upgrade --available && \
   apk add \
     autoconf=2.72-r1 \
-    automake=1.17-r1 \
+    automake=1.18.1-r0 \
     build-base=0.5-r3 \
-    cmake=3.31.7-r1 \
-    curl=8.14.1-r2 \
-    g++=14.2.0-r6 \
-    gcc=14.2.0-r6 \
-    libjpeg-turbo-dev=3.1.0-r0 \
-    libpng-dev=1.6.47-r0 \
+    cmake=4.1.3-r0 \
+    curl=8.17.0-r1 \
+    g++=15.2.0-r2 \
+    gcc=15.2.0-r2 \
+    libjpeg-turbo-dev=3.1.2-r0 \
+    libpng-dev=1.6.54-r0 \
     make=4.4.1-r3 \
-    musl-dev=1.2.5-r10 \
-    pkgconf=2.4.3-r0 \
+    musl-dev=1.2.5-r21 \
+    pkgconf=2.5.1-r0 \
     zlib-dev=1.3.1-r2
 
 #######################################################################################################################
@@ -92,7 +92,7 @@ RUN curl --fail --location --silent --show-error --output mozjpeg.tar.gz https:/
   tar -xvzf mozjpeg.tar.gz --strip-components=1
 
 RUN --mount=type=cache,id="build-${TARGETARCH}${TARGETVARIANT}-mozjpeg",sharing=locked,target=/usr/build \
-  cmake -G"Unix Makefiles" -DENABLE_STATIC=FALSE -S /usr/src -B /usr/build
+  cmake -G"Unix Makefiles" -DENABLE_STATIC=FALSE -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -S /usr/src -B /usr/build
 
 WORKDIR /usr/build
 
@@ -100,7 +100,7 @@ RUN --mount=type=cache,id="build-${TARGETARCH}${TARGETVARIANT}-mozjpeg",sharing=
   make -j"$(nproc)" install
 
 #######################################################################################################################
-FROM alpine:3.22.2@sha256:4b7ce07002c69e8f3d704a9c5d6fd3053be500b7f1c69fc0d80990c2ad8dd412 AS release
+FROM alpine:3.23.3@sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659 AS release
 
 ARG TARGETARCH
 ARG TARGETVARIANT
@@ -109,9 +109,9 @@ RUN --mount=type=cache,id="apk-${TARGETARCH}${TARGETVARIANT}",sharing=locked,tar
   apk update && \
   apk upgrade --available && \
   apk add \
-    libjpeg-turbo=3.1.0-r0 \
-    libpng=1.6.47-r0 \
-    libstdc++=14.2.0-r6 \
+    libjpeg-turbo=3.1.2-r0 \
+    libpng=1.6.54-r0 \
+    libstdc++=15.2.0-r2 \
     zlib=1.3.1-r2
 
 COPY --from=build-pngcrush --chmod=0755 /usr/src/pngcrush /usr/local/bin/
