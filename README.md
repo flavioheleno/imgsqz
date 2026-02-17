@@ -3,7 +3,7 @@
 Tiny, dockerized image compression toolbox.
 Bring best-of-breed encoders/optimizers to any project with one container.
 
-> Ships a curated set of CLI tools (mozjpeg, jpegoptim, guetzli, optipng, pngcrush) and a lean runtime so you can batch-optimize images locally or in CI without installing native deps.
+> Ships a curated set of CLI tools (mozjpeg, jpegoptim, guetzli, optipng, pngcrush, advpng) and a lean runtime so you can batch-optimize images locally or in CI without installing native deps.
 
 ---
 
@@ -17,7 +17,7 @@ Bring best-of-breed encoders/optimizers to any project with one container.
 
 ## Acknowledgements
 
-* The authors and maintainers of [**mozjpeg**](https://github.com/mozilla/mozjpeg), [**jpegoptim**](https://github.com/tjko/jpegoptim), [**guetzli**](https://github.com/google/guetzli), [**optipng**](https://sourceforge.net/projects/optipng), and [**pngcrush**](https://github.com/glennrp/pmt).
+* The authors and maintainers of [**mozjpeg**](https://github.com/mozilla/mozjpeg), [**jpegoptim**](https://github.com/tjko/jpegoptim), [**guetzli**](https://github.com/google/guetzli), [**optipng**](https://sourceforge.net/projects/optipng), [**pngcrush**](https://github.com/glennrp/pmt), and [**advancecomp**](https://github.com/amadvance/advancecomp).
 * Inspired by the need for a **portable**, **zero-install** image optimization toolkit for local use and CI.
 
 ---
@@ -27,7 +27,7 @@ Bring best-of-breed encoders/optimizers to any project with one container.
 Format | Primary tools                                           | Typical use
 -------|---------------------------------------------------------|------------
 JPEG   | `mozjpeg` (`cjpeg`/`jpegtran`), `jpegoptim`, `guetzli`* | High-quality lossy encode; progressive; metadata stripping; lossless transforms
-PNG    | `optipng`, `pngcrush`                                   | Lossless structural optimizations; brute-force parameter search
+PNG    | `optipng`, `pngcrush`, `advpng`                         | Lossless structural optimizations; brute-force parameter search; advanced recompression
 
 * *Guetzli is very slow and mostly of historical interest; prefer mozjpeg for production.*
 
@@ -49,7 +49,7 @@ Mount your working directory into `/app`:
 
 ```bash
 # List available tools inside the container
-docker run --rm imgsqz sh -lc 'cjpeg -version || true; jpegtran -version || true; jpegoptim --version; optipng -v | head -n1; pngcrush -version | head -n1'
+docker run --rm imgsqz sh -lc 'cjpeg -version || true; jpegtran -version || true; jpegoptim --version; optipng -v | head -n1; pngcrush -version | head -n1; advpng --version | head -n1'
 ```
 
 ---
@@ -88,6 +88,13 @@ docker run --rm -v "$PWD:/app" imgsqz \
 ```bash
 docker run --rm -v "$PWD:/app" imgsqz \
   sh -lc 'pngcrush -rem alla -brute -reduce /app/in.png /app/out.png'
+```
+
+### PNG: advanced recompression (advpng)
+
+```bash
+docker run --rm -v "$PWD:/app" imgsqz \
+  sh -lc 'cp /app/in.png /app/out.png && advpng -z4 /app/out.png'
 ```
 
 ### Batch a whole folder (recursive, keep structure)

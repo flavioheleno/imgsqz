@@ -51,6 +51,18 @@ RUN --mount=type=cache,id="build-${TARGETARCH}${TARGETVARIANT}-optipng",sharing=
   make install
 
 #######################################################################################################################
+FROM build-base AS build-advpng
+
+WORKDIR /usr/src
+
+RUN curl --fail --location --silent --show-error --output advpng.tar.gz https://github.com/amadvance/advancecomp/archive/refs/tags/v2.6.tar.gz && \
+  tar -xvzf advpng.tar.gz --strip-components=1 && \
+  autoreconf -ivf && \
+  ./configure && \
+  make -j"$(nproc)" && \
+  make install
+
+#######################################################################################################################
 FROM build-base AS build-jpegoptim
 
 ARG TARGETARCH
@@ -118,6 +130,8 @@ COPY --from=build-pngcrush --chmod=0755 /usr/src/pngcrush /usr/local/bin/
 
 COPY --from=build-optipng --chmod=0755 /usr/local/bin/optipng /usr/local/bin/
 COPY --from=build-optipng /usr/local/lib/*.so /usr/local/lib/*.so.* /usr/local/lib/
+
+COPY --from=build-advpng --chmod=0755 /usr/local/bin/advpng /usr/local/bin/
 
 COPY --from=build-jpegoptim --chmod=0755 /usr/local/bin/jpegoptim /usr/local/bin/
 

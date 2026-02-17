@@ -13,6 +13,11 @@ build-optipng:
 run-optipng:
 	podman run --rm --tty --interactive --volume $(shell pwd -P):/app --workdir /app img-sqz:optipng
 
+build-advpng:
+	podman build --file Dockerfile --tag img-sqz:advpng --target build-advpng
+
+run-advpng:
+	podman run --rm --tty --interactive --volume $(shell pwd -P):/app --workdir /app img-sqz:advpng
 
 build-jpegoptim:
 	podman build --file Dockerfile --tag img-sqz:jpegoptim --target build-jpegoptim
